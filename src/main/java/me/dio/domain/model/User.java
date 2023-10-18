@@ -2,14 +2,18 @@ package me.dio.domain.model;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 
 @Entity(name = "tb_user")
-public class User {
+public class User implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
     private String name;
     @OneToOne(cascade = CascadeType.ALL)
     private Account account;
@@ -20,11 +24,11 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<News> news;
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
