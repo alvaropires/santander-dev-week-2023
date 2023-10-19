@@ -5,6 +5,7 @@ import me.dio.domain.repository.UserRepository;
 import me.dio.domain.service.UserService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
@@ -15,6 +16,11 @@ public class UserServiceImpl implements UserService {
 
     public UserServiceImpl(UserRepository userRepository){
         this.userRepository = userRepository;
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 
     @Override
@@ -31,5 +37,13 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("This Card Number already exists.");
         }
         return userRepository.save(userToCreate);
+    }
+
+    @Override
+    public void delete(UUID id) {
+        if(!userRepository.existsById(id)){
+            throw new NoSuchElementException();
+        }
+        userRepository.deleteById(id);
     }
 }
