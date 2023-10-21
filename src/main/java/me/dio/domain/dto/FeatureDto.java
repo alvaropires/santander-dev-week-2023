@@ -1,32 +1,32 @@
 package me.dio.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
 import me.dio.domain.model.Feature;
 import org.springframework.beans.BeanUtils;
 
 import java.util.UUID;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class FeatureDto {
-    private UUID id;
+public record FeatureDto(
 
-    @JsonView(UserDto.View.RegistrationPost.class)
-    private String icon;
+        @NotNull(groups = {UserDto.View.UserPut.class})
+        @JsonView({UserDto.View.UserPut.class})
+        UUID id,
+        @NotNull(groups = {UserDto.View.RegistrationPost.class, UserDto.View.UserPut.class})
+        @JsonView({UserDto.View.RegistrationPost.class, UserDto.View.UserPut.class})
+        String icon,
 
-    @JsonView(UserDto.View.RegistrationPost.class)
-    private String description;
+        @NotNull(groups = {UserDto.View.RegistrationPost.class, UserDto.View.UserPut.class})
+        @JsonView({UserDto.View.RegistrationPost.class, UserDto.View.UserPut.class})
+        String description) {
+
+    public FeatureDto(Feature feature){
+        this(feature.getId(), feature.getIcon(), feature.getDescription());
+    }
 
     public Feature toFeatureModel(){
-        var feature = new Feature();
-        BeanUtils.copyProperties(this, feature);
-        return feature;
-    }
-    public FeatureDto(Feature feature){
-        BeanUtils.copyProperties(feature, this);
+        Feature featureModel = new Feature();
+        BeanUtils.copyProperties(this, featureModel);
+        return featureModel;
     }
 }

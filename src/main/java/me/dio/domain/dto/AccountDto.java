@@ -3,45 +3,39 @@ package me.dio.domain.dto;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import me.dio.domain.model.Account;
 import org.springframework.beans.BeanUtils;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class AccountDto{
-    private UUID id;
+public record AccountDto(
+        @NotNull(groups = {UserDto.View.UserPut.class})
+        @JsonView({UserDto.View.UserPut.class})
+        UUID id,
+        @NotBlank(groups = {UserDto.View.RegistrationPost.class, UserDto.View.UserPut.class})
+        @JsonView({UserDto.View.RegistrationPost.class, UserDto.View.UserPut.class})
+        String number,
 
-    @NotBlank(groups = {UserDto.View.RegistrationPost.class})
-    @JsonView(UserDto.View.RegistrationPost.class)
-    private String number;
+        @NotBlank(groups = {UserDto.View.RegistrationPost.class, UserDto.View.UserPut.class})
+        @JsonView({UserDto.View.RegistrationPost.class, UserDto.View.UserPut.class})
+        String agency,
 
-    @NotBlank(groups = UserDto.View.RegistrationPost.class)
-    @JsonView(UserDto.View.RegistrationPost.class)
-    private String agency;
+        @NotNull(groups = {UserDto.View.RegistrationPost.class, UserDto.View.UserPut.class})
+        @JsonView({UserDto.View.RegistrationPost.class, UserDto.View.UserPut.class})
+        BigDecimal balance,
 
-    @NotNull(groups = UserDto.View.RegistrationPost.class)
-    @JsonView(UserDto.View.RegistrationPost.class)
-    private BigDecimal balance;
-
-    @NotNull(groups = UserDto.View.RegistrationPost.class)
-    @JsonView(UserDto.View.RegistrationPost.class)
-    private BigDecimal limit;
+        @NotNull(groups = {UserDto.View.RegistrationPost.class, UserDto.View.UserPut.class})
+        @JsonView({UserDto.View.RegistrationPost.class, UserDto.View.UserPut.class})
+        BigDecimal limit) {
 
     public AccountDto(Account account){
-        BeanUtils.copyProperties(account, this);
+        this(account.getId(),account.getNumber(),account.getAgency(),account.getBalance(),account.getLimit());
     }
 
     public Account toAccountModel(){
-        var accountModel = new Account();
+        Account accountModel = new Account();
         BeanUtils.copyProperties(this, accountModel);
         return accountModel;
     }
 }
-

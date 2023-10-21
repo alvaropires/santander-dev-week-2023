@@ -1,32 +1,32 @@
 package me.dio.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
 import me.dio.domain.model.News;
 import org.springframework.beans.BeanUtils;
 
 import java.util.UUID;
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class NewsDto {
-    private UUID id;
 
-    @JsonView(UserDto.View.RegistrationPost.class)
-    private String icon;
+public record NewsDto(
 
-    @JsonView(UserDto.View.RegistrationPost.class)
-    private String description;
+        @NotNull(groups = {UserDto.View.UserPut.class})
+        @JsonView({UserDto.View.UserPut.class})
+        UUID id,
+        @NotNull(groups = {UserDto.View.RegistrationPost.class, UserDto.View.UserPut.class})
+        @JsonView({UserDto.View.RegistrationPost.class, UserDto.View.UserPut.class})
+        String icon,
 
-    public News toNewsModel(){
-        var newsModel = new News();
-        BeanUtils.copyProperties(this, newsModel);
-        return newsModel;
-    }
+        @NotNull(groups = {UserDto.View.RegistrationPost.class, UserDto.View.UserPut.class})
+        @JsonView({UserDto.View.RegistrationPost.class, UserDto.View.UserPut.class})
+        String description) {
 
     public NewsDto(News news){
-        BeanUtils.copyProperties(news, this);
+        this(news.getId(), news.getIcon(), news.getDescription());
+    }
+
+    public News toNewsModel(){
+        News newsModel = new News();
+        BeanUtils.copyProperties(this, newsModel);
+        return newsModel;
     }
 }

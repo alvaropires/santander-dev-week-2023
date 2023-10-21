@@ -2,7 +2,6 @@ package me.dio.domain.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import me.dio.domain.dto.UserDto;
-import me.dio.domain.model.User;
 import me.dio.domain.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,19 +22,6 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-
-    @GetMapping
-    public ResponseEntity<List<UserDto>> findAll(){
-        var userList = userService.findAll();
-        return ResponseEntity.status(HttpStatus.OK).body(userList.stream().map(UserDto::new).toList());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<User> findById(@PathVariable UUID id){
-        var user = userService.findById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(user);
-    }
-
     @PostMapping
     public ResponseEntity<UserDto> create(@RequestBody
                                           @Validated(UserDto.View.RegistrationPost.class)
@@ -49,8 +35,31 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).location(location).body(userResponseDto);
     }
 
+    @GetMapping
+    public ResponseEntity<List<UserDto>> findAll(){
+        var userList = userService.findAll();
+        return ResponseEntity.status(HttpStatus.OK).body(userList.stream().map(UserDto::new).toList());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> findById(@PathVariable UUID id){
+        var user = userService.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(new UserDto(user));
+    }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDto> update(@PathVariable(value = "id") UUID id,
+                                          @RequestBody @Validated(UserDto.View.UserPut.class)
+                                          @JsonView(UserDto.View.UserPut.class) UserDto userToUpdate){
+        var userUpdated = userService.updateUser(id, userToUpdate);
+        var userResponseDto = new UserDto(userUpdated);
+        return ResponseEntity.status(HttpStatus.OK).body(userResponseDto);
+
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable UUID id){
+    public ResponseEntity<Object> delete(@PathVariable UUID id){
         userService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body("User deleted sucessfully!");
     }
