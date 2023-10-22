@@ -2,6 +2,8 @@ package me.dio.domain.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,8 +33,8 @@ public class UserController {
     @PostMapping
     @Operation(summary = "Create a new user.", description = "Create a new user and return the created user's data")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User created successfully"),
-            @ApiResponse(responseCode = "422", description = "Invalid user data provided")
+            @ApiResponse(responseCode = "201", description = "User created successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDto.class))),
+            @ApiResponse(responseCode = "422", description = "Invalid user data provided", content = @Content)
     })
     public ResponseEntity<UserDto> create(@RequestBody
                                           @Validated(UserDto.View.RegistrationPost.class)
@@ -49,7 +51,7 @@ public class UserController {
     @GetMapping
     @Operation(summary = "Get all users", description = "Retrieve a list of all registered users")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Operation successful")
+            @ApiResponse(responseCode = "200", description = "Operation successful", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDto.class)))
     })
     public ResponseEntity<List<UserDto>> findAll(){
         var userList = userService.findAll();
@@ -59,8 +61,8 @@ public class UserController {
     @GetMapping("/{id}")
     @Operation(summary = "Get a user by ID", description = "Retrieve a specific user based on its ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Operation successful"),
-            @ApiResponse(responseCode = "404", description = "User not found")
+            @ApiResponse(responseCode = "200", description = "Operation successful", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDto.class))),
+            @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
     })
     public ResponseEntity<UserDto> findById(@PathVariable UUID id){
         var user = userService.findById(id);
@@ -71,9 +73,9 @@ public class UserController {
     @PutMapping("/{id}")
     @Operation(summary = "Update a user", description = "Update the data of an existing user based on its ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User updated successfully"),
-            @ApiResponse(responseCode = "404", description = "User not found"),
-            @ApiResponse(responseCode = "422", description = "Invalid user data provided")
+            @ApiResponse(responseCode = "200", description = "User updated successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDto.class))),
+            @ApiResponse(responseCode = "404", description = "User not found", content = @Content),
+            @ApiResponse(responseCode = "422", description = "Invalid user data provided", content = @Content)
     })
     public ResponseEntity<UserDto> update(@PathVariable(value = "id") UUID id,
                                           @RequestBody @Validated(UserDto.View.UserPut.class)
@@ -87,8 +89,8 @@ public class UserController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a user", description = "Delete an existing user based on its ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "User deleted successfully"),
-            @ApiResponse(responseCode = "404", description = "User not found")
+            @ApiResponse(responseCode = "204", description = "User deleted successfully", content = @Content),
+            @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
     })
     public ResponseEntity<Object> delete(@PathVariable UUID id){
         userService.delete(id);
