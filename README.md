@@ -15,12 +15,40 @@ Java RESTful API criada para projeto final do Bootcamp DIO JAVA SANTANDER
 - [OpenAPI](https://www.openapis.org/)
 - [RailWay](https://railway.app/)
 
+## Descrição do Projeto:
 
-## Funcionalidades
+Este projeto visa criar uma API RESTFul de gerenciamento de usuários, conforme o modelo fornecido. A API permitirá a criação, leitura, atualização e exclusão de usuários e seus dados associados. Além disso, a documentação da API será realizada usando o OpenAPI Swagger, tornando-a facilmente acessível e utilizável.
 
-:heavy_check_mark: CRUD completo dos Usuários
 
-✔️: Swagger para documentação, testes e consumo da API.
+## Funcionalidades:
+
+A API oferece as seguintes funcionalidades:
+
+✔️ Listar Usuários:
+
+- Endpoint: GET /users
+- Descrição: Retorna a lista de todos os usuários.
+
+✔️ Obter Usuário por ID:
+
+- Endpoint: GET /users/{id}
+- Descrição: Retorna os detalhes de um usuário específico com base em seu ID.
+
+✔️ Criar Usuário:
+
+- Endpoint: POST /users
+- Descrição: Cria um novo registro de usuário com base nos dados fornecidos.
+
+✔️ Atualizar Usuário:
+
+- Endpoint: PUT /users/{id}
+- Descrição: Atualiza os dados de um usuário existente com base em seu ID.
+
+✔️ Excluir Usuário:
+
+- Endpoint: DELETE /users/{id}
+- Descrição: Exclui um usuário com base em seu ID.
+
 
 ## SQL / Banco de Dados
 
